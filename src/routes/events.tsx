@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createSignal, onMount } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal, onMount } from "solid-js"
 import { getAllEvents, getSemesters, getUserAttendenceRequests, pbStore, requestEvent } from "~/service"
 import { OcLocation2 } from 'solid-icons/oc'
 import { VsOrganization } from 'solid-icons/vs'
@@ -14,6 +14,17 @@ export default function events() {
   const [selectedSemester, setSelectedSemester] = createSignal<string>("All")
   const [selectedEvent, setSelectedEvent] = createSignal<Event | null>(null)
   const [userRequests, setUserRequests] = createSignal<AttendenceRequest[] | undefined>()
+
+  const eventAttended = (eid: string) => {
+    return userRequests()?.some(request => request.event === selectedEvent()?.id)
+  }
+
+  const onRequestEvent = () => {
+    console.log(pbStore.user?.id!, " + ", selectedEvent()?.id!)
+    requestEvent(pbStore.user?.id!, selectedEvent()?.id!).then(() => {
+      getUserAttendenceRequests().then(s => setUserRequests(s))
+    })
+  }
 
   onMount(async () => {
     getAllEvents().then(e => setEvents(e)).then(() => setSelectedEvent(events()[0]))
@@ -66,9 +77,13 @@ export default function events() {
         <div class="w-3/4">
           <div class="card shadow-xl outline">
               <div class="card-body">
-                <div>
-                <h2 class="card-title">{selectedEvent()?.name}</h2>
-                <button class="btn btn-outline" onClick={() => requestEvent(pbStore.user?.id!, selectedEvent()?.id!)}>Im gonna cum</button>
+                <div class="flex flex-row justify-between items-center w-full">
+                  <h2 class="card-title">{selectedEvent()?.name} {(eventAttended(selectedEvent()?.id ?? "")) && "- Attending"}</h2>
+                  <button class="btn btn-outline" disabled={eventAttended(selectedEvent()?.id ?? "")} onClick={onRequestEvent}>
+                    {
+                      eventAttended(selectedEvent()?.id ?? "") ? "I'm going" : "I'll go"
+                    }
+                  </button>
                 </div>
                 <div class="flex flex-row items-center gap-2">
                   <AiOutlineCalendar class="fill-primary-content" />
@@ -87,7 +102,6 @@ export default function events() {
                   <h3>{selectedEvent()?.value} {selectedEvent()?.category} points</h3>
                 </div>
                 <p class="p-4">{selectedEvent()?.description ?? "N/A"}</p>
-                <p class="text-left">Attendees: {selectedEvent()?.expand?.attendees?.map((user: User) => user.first).join(", ")}</p>
               </div>
           </div>
           <div class="overflow-x-auto">

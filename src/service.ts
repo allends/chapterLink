@@ -110,10 +110,10 @@ export async function createEvent(name: string, value:number, date: string, cate
   return newEvent
 }
 
-export async function requestEvent(uid: string, eid: string) {
+export async function requestEvent(user: string, event: string) {
   const data = {
-    uid,
-    eid
+    user,
+    event
   }
   const record = await pb.collection('attendence_requests').create<AttendenceRequest>(data)
   return record
