@@ -37,3 +37,8 @@ export interface Points {
   semester: string;
   points: number
 }
+
+export interface AttendenceRequest {
+  user: User,
+  event: Event
+}

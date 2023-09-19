@@ -1,4 +1,5 @@
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { Navigate } from "solid-start";
 import { getSemesters, getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
 import { User, Event, Points } from "~/types";
 import { parseDate } from "~/utils/date";

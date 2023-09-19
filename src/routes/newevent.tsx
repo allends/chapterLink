@@ -55,6 +55,7 @@ export default function newevent() {
           "description": "",
           "organizers": []
         })
+        window.location.pathname = "/events"
       }
       }).catch(e => {
         alert("Please fill out the form correctly")

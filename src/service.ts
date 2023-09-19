@@ -1,5 +1,5 @@
 import PocketBase, { RecordAuthResponse } from 'pocketbase'
-import { User, Event, Points } from './types'
+import { User, Event, Points, AttendenceRequest } from './types'
 import { createStore } from 'solid-js/store'
 
 export const pb = new PocketBase("http://127.0.0.1:8090/")
@@ -108,4 +108,18 @@ export async function createEvent(name: string, value:number, date: string, cate
     organizers
   })
   return newEvent
+}
+
+export async function requestEvent(uid: string, eid: string) {
+  const data = {
+    uid,
+    eid
+  }
+  const record = await pb.collection('attendence_requests').create<AttendenceRequest>(data)
+  return record
+}
+
+export async function getUserAttendenceRequests() {
+  const resultList = await pb.collection('attendence_requests').getFullList<AttendenceRequest>()
+  return resultList
 }

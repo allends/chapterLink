@@ -1,10 +1,10 @@
-import { For, Show, createSignal, onMount } from "solid-js"
-import { getAllEvents, getSemesters, pbStore } from "~/service"
+import { For, Show, createEffect, createSignal, onMount } from "solid-js"
+import { getAllEvents, getSemesters, getUserAttendenceRequests, pbStore, requestEvent } from "~/service"
 import { OcLocation2 } from 'solid-icons/oc'
 import { VsOrganization } from 'solid-icons/vs'
 import { BiRegularCoin } from 'solid-icons/bi'
 import { AiOutlineCalendar, AiOutlinePlus } from 'solid-icons/ai'
-import { Event, User } from "~/types"
+import { AttendenceRequest, Event, User } from "~/types"
 import { parseDate } from "~/utils/date"
 
 export default function events() {
@@ -13,11 +13,17 @@ export default function events() {
   const [semesters, setSemesters] = createSignal<string[]>([])
   const [selectedSemester, setSelectedSemester] = createSignal<string>("All")
   const [selectedEvent, setSelectedEvent] = createSignal<Event | null>(null)
+  const [userRequests, setUserRequests] = createSignal<AttendenceRequest[] | undefined>()
 
   onMount(async () => {
     getAllEvents().then(e => setEvents(e)).then(() => setSelectedEvent(events()[0]))
     getSemesters().then(s => setSemesters(s))
+    getUserAttendenceRequests().then(s => setUserRequests(s))
   })
+
+  createEffect(() => {
+    console.log(userRequests())
+  }, [userRequests()])
 
   return (
     <main class="text-center mx-auto p-4">
@@ -50,7 +56,7 @@ export default function events() {
             <li
               onClick={() => setSelectedEvent(item)}
             >
-              <a> {item.name} </a>
+              <a>{item.name}</a>
             </li>
             )}
           </For>
@@ -60,7 +66,10 @@ export default function events() {
         <div class="w-3/4">
           <div class="card shadow-xl outline">
               <div class="card-body">
+                <div>
                 <h2 class="card-title">{selectedEvent()?.name}</h2>
+                <button class="btn btn-outline" onClick={() => requestEvent(pbStore.user?.id!, selectedEvent()?.id!)}>Im gonna cum</button>
+                </div>
                 <div class="flex flex-row items-center gap-2">
                   <AiOutlineCalendar class="fill-primary-content" />
                   <h3>{(new Date(selectedEvent()?.date ?? "")).toDateString()}</h3>

@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense, onCleanup, onMount } from "solid-js";
+import { Suspense, createEffect, onCleanup, onMount } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -14,6 +14,8 @@ import {
 import "./root.css";
 import { logout, pb, pbStore, setPbStore, subscribe, unsubscribe } from "./service";
 import { User } from "./types";
+
+const UNPROTECTED_PATHS = ["/login"]
 
 export default function Root() {
 
@@ -35,6 +37,13 @@ export default function Root() {
     window.location.pathname = "/login"
   }
 
+  // Send the user to the login screen if they try to access some info
+  createEffect(() => {
+    if (!pbStore.user && !UNPROTECTED_PATHS.includes(window.location.pathname)) {
+      window.location.pathname = "/login"
+    }
+  }, [pbStore.user])
+  
   return (
     <Html lang="en">
       <Head>
