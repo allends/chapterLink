@@ -1,8 +1,10 @@
 import PocketBase, { RecordAuthResponse } from 'pocketbase'
 import { User, Event, Points, AttendenceRequest } from './types'
 import { createStore } from 'solid-js/store'
+import { createSignal } from 'solid-js'
 
 export const pb = new PocketBase("http://127.0.0.1:8090/")
+export const [user, setUser] = createSignal<User | undefined>()
 
 export const [pbStore, setPbStore] = createStore<{
   pb: PocketBase,
@@ -14,6 +16,7 @@ export const [pbStore, setPbStore] = createStore<{
 
 export const subscribe = () => {
   pb.collection("users").subscribe<User>(pb.authStore.model?.id ?? "", (newUser) => {
+    setUser(newUser.record)
     setPbStore("user", newUser.record)
   })
 }
@@ -28,7 +31,8 @@ export async function login(username: string, password: string): Promise<RecordA
 }
 
 export function logout() {
-   pb.authStore.clear()
+  setUser()
+  pb.authStore.clear()
 }
 
 export async function updateUser(venmo: string, number: string, birthday: string) {
@@ -117,6 +121,13 @@ export async function requestEvent(user: string, event: string) {
   }
   const record = await pb.collection('attendence_requests').create<AttendenceRequest>(data)
   return record
+}
+
+export async function unrequestEvent(user: string, event: string) {
+  const filter = `user="${user}" && event="${event}"`
+  const record = await pb.collection('attendence_requests').getFirstListItem<AttendenceRequest>(filter)
+  const deleted = await pb.collection('attendence_requests').delete(record.id)
+  return deleted
 }
 
 export async function getUserAttendenceRequests() {

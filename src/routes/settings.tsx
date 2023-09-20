@@ -2,21 +2,19 @@ import { onMount } from "solid-js"
 import { createStore } from "solid-js/store"
 import { pbStore, updateUser } from "~/service"
 
+const initalSettingFormState = {
+  first: "",
+  last: "",
+  venmo: "",
+  number: "",
+  birthday: ""
+}
+
+type SettingFormType = typeof initalSettingFormState
+
 export default function settings() {
 
-  const [userInfo, setUserInfo] = createStore<{
-    first: string,
-    last: string,
-    venmo: string,
-    number: string,
-    birthday: string
-  }>({
-    first: "",
-    last: "",
-    venmo: "",
-    number: "",
-    birthday: ""
-  }) 
+  const [userInfo, setUserInfo] = createStore<SettingFormType>(initalSettingFormState) 
 
   onMount(() => {
     setUserInfo({

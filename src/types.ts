@@ -39,6 +39,7 @@ export interface Points {
 }
 
 export interface AttendenceRequest {
+  id: string,
   event: string,
   user: string
 }
