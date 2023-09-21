@@ -4,7 +4,7 @@ import { TiDeleteOutline } from 'solid-icons/ti'
 import { createEvent, getSemesters, getUsers } from "~/service";
 import { User } from "~/types";
 import { createRequest } from "~/utils/createRequest";
-import { UserPicker } from "~/components/UserPicker";
+import { UserPicker } from "~/components/user/UserPicker";
 
 export const createEventState = () => {
   const options = ['Brotherhood', 'Scholarship', 'Professionalism', 'Community Service', 'Fundraising', 'Pledge']

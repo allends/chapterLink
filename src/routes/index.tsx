@@ -1,22 +1,27 @@
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { Navigate } from "solid-start";
-import { getSemesters, getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
+import { getAllEvents, getSemesters, getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
 import { User, Event, Points } from "~/types";
+import { createRequest } from "~/utils/createRequest";
 import { parseDate } from "~/utils/date";
+
+const createHomeState = () => {
+  const userEventsRequest = createRequest(getUserEvents)
+  const userPointsRequest = createRequest(getUserPoints)
+  const semestersRequest = createRequest(getSemesters)
+
+  return {
+    userEventsRequest,
+    userPointsRequest,
+    semestersRequest
+  }
+}
 
 export default function Home() {
 
+  const _S = createHomeState()
   const [ activeTab, setActiveTab] = createSignal<number>(0)
-  const [ events, setEvents ] = createSignal<Event[]>([] as Event[])
-  const [ semesters, setSemesters ] = createSignal<string[]>([])
   const [ selectedSemester, setSelectedSemester ] = createSignal<string>("All")
-  const [ points, setPoints ] = createSignal([] as Points[])
-
-  onMount(async () => {
-    getUserEvents().then((events) => setEvents(events))
-    getUserPoints().then(p => setPoints(p))
-    getSemesters().then(sem => setSemesters(sem)).then(() => setSelectedSemester(semesters()[0]))
-  })
 
   return (
     <main class="text-center mx-auto p-4">
@@ -33,7 +38,7 @@ export default function Home() {
           <div>
             <select class="select select-bordered" value={selectedSemester()} onChange={e => setSelectedSemester(e.target.value)}>
               <option selected>All</option>
-              <For each={semesters()}>
+              <For each={_S.semestersRequest.data()}>
                 {sem => (
                   <option>{sem}</option>
                 )}
@@ -49,7 +54,7 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              <For each={points().filter((p) => p.semester === selectedSemester() || selectedSemester() === "All")}>
+              <For each={_S.userPointsRequest.data()?.filter((p) => p.semester === selectedSemester() || selectedSemester() === "All")}>
                 {(point) => (
                   <tr>
                     <td>{point.semester}</td>
@@ -74,7 +79,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                <For each={events()}>
+                <For each={_S.userEventsRequest.data()}>
                   {(event) => (
                     <tr>
                       <td>{event.name}</td>

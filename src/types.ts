@@ -15,6 +15,7 @@ export interface User {
 
 export interface Event {
   id: string;
+  attendees: string[],
   name: string;
   value: number;
   date: string;

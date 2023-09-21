@@ -130,7 +130,35 @@ export async function unrequestEvent(user: string, event: string) {
   return deleted
 }
 
-export async function getUserAttendenceRequests() {
+export async function getAllAttendenceRequests() {
   const resultList = await pb.collection('attendence_requests').getFullList<AttendenceRequest>()
   return resultList
+}
+
+export async function getUserAttendenceRequests() {
+  const records = await pb.collection('attendence_requests').getList<AttendenceRequest>(1, 50, {
+    filter: `user="${pb.authStore.model?.id}"`
+  })
+  return records.items
+}
+
+export async function approveUserAttendenceRequest(request: AttendenceRequest) {
+  // delete the user request
+  const deleted = await pb.collection('attendence_requests').delete(request.id)
+  if (!deleted) return
+  
+  // update the event to have the user in there now
+  const event = await pb.collection('events').getOne<Event>(request.event)
+  const data: Event = {
+    ...event,
+    attendees: [...event.attendees, request.user],
+  }
+  const updated = await pb.collection('events').update<Event>(event.id, data)
+  return updated
+}
+
+export async function rejectUserAttendenceRequest(request: AttendenceRequest) {
+  // delete the user request
+  const deleted = await pb.collection('attendence_requests').delete(request.id)
+  return
 }

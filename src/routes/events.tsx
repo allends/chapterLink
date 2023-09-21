@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createSignal } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
 import { getAllEvents, getSemesters, getUserAttendenceRequests, pbStore, requestEvent, unrequestEvent } from "~/service"
 import { OcLocation2 } from 'solid-icons/oc'
 import { VsOrganization } from 'solid-icons/vs'
@@ -10,6 +10,7 @@ import { createRequest } from "~/utils/createRequest"
 export const EventCard = (props: {
   event: Event,
   attended: boolean,
+  requested: boolean,
   onRequestEvent: () => void,
   onRejectEvent: () => void,
 }) => {
@@ -21,12 +22,12 @@ export const EventCard = (props: {
           <div class="flex flex-row justify-between items-center w-full">
             <h2 class="card-title">{props.event.name} {props.attended && "- Attending"}</h2>
             <div class="flex flex-row gap-5">
-            <Show when={props.attended}>
-              <button class="btn btn-error" onClick={props.onRejectEvent}>
+            <Show when={props.requested}>
+              <button disabled={props.attended} class="btn btn-error" onClick={props.onRejectEvent}>
                 Nevermind
               </button>
             </Show>
-            <button class="btn btn-outline" disabled={props.attended} onClick={props.onRequestEvent}>
+            <button class="btn btn-outline" disabled={props.requested || props.attended} onClick={props.onRequestEvent}>
               {
                 props.attended ? "I'm going" : "I'll go"
               }
@@ -50,6 +51,9 @@ export const EventCard = (props: {
             <h3>{props.event.value} {props.event.category} points</h3>
           </div>
           <p class="p-4">{props.event.description ?? "N/A"}</p>
+          <p>
+            {props.event.expand?.attendees?.map(attendee => attendee.first + " " + attendee.last).join(", ")}
+          </p>
         </div>
       </div>
       <div class="overflow-x-auto">
@@ -62,10 +66,24 @@ const createEventState = () => {
   const eventsRequest = createRequest(getAllEvents)
   const semestersRequest = createRequest(getSemesters)
   const userAttendanceRequest = createRequest(getUserAttendenceRequests)
-  const [selectedEvent, setSelectedEvent] = createSignal<Event | undefined>()
+  const [selectedEventId, setSelectedEventId] = createSignal<string | undefined>()
   const [selectedSemester, setSelectedSemester] = createSignal<string>("All")
 
+  createEffect(() => {
+    if (eventsRequest.data() && !selectedEventId()) {
+      setSelectedEventId(eventsRequest.data()?.at(0)?.id)
+    }
+  })
+
+  const selectedEvent = createMemo(() => {
+    return eventsRequest.data()?.find(event => event.id === selectedEventId())
+  })
+
   const eventAttended = () => {
+    return selectedEvent()?.attendees.some(user => user === pbStore.user?.id) || false
+  }
+
+  const eventRequested = () => {
     return userAttendanceRequest.data()?.some(request => request.event === selectedEvent()?.id) || false
   }
 
@@ -81,17 +99,14 @@ const createEventState = () => {
     })
   }
 
-  createEffect(() => {
-    console.log(selectedEvent)
-  }, [selectedEvent])
-
   return {
     eventsRequest,
     semestersRequest,
     userAttendanceRequest,
     selectedEvent,
-    setSelectedEvent,
+    setSelectedEventId,
     eventAttended,
+    eventRequested,
     selectedSemester,
     setSelectedSemester,
     onEventRequest,
@@ -132,7 +147,7 @@ export default function events() {
             <For each={_S.eventsRequest.data()?.filter(event => _S.selectedSemester() === event.semester || _S.selectedSemester() === "All")} fallback={<div>no users</div>}>
               {(item, index) => (
                 <li
-                  onClick={() => _S.setSelectedEvent(item)}
+                  onClick={() => _S.setSelectedEventId(item.id)}
                 >
                   <a>{item.name}</a>
                 </li>
@@ -141,7 +156,7 @@ export default function events() {
           </ul>
         </div>
         <Show when={_S.selectedEvent()} fallback={<div class="text-center mx-auto text-lg">No event selected.</div>}>
-          <EventCard event={_S.selectedEvent()!} attended={_S.eventAttended()} onRequestEvent={_S.onEventRequest} onRejectEvent={_S.onEventReject} />
+          <EventCard event={_S.selectedEvent()!} attended={_S.eventAttended()} requested={_S.eventRequested()} onRequestEvent={_S.onEventRequest} onRejectEvent={_S.onEventReject} />
         </Show>
       </div>
     </main>
