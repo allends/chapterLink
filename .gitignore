@@ -5,6 +5,7 @@ dist
 .vercel
 .netlify
 netlify
+pb_migrations
 
 # dependencies
 /node_modules
