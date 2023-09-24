@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense, createEffect, onCleanup, onMount } from "solid-js";
+import { Show, Suspense, createEffect, onCleanup, onMount } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -61,17 +61,21 @@ export default function Root() {
             <Toaster />
               <nav class="navbar bg-primary text-primary-content" data-theme="cupcake">
                 <div class="navbar-start">
-                  <div class="dropdown">
-                    <label tabIndex={0} class="btn btn-ghost btn-circle">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h7" /></svg>
-                    </label>
-                    <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                      <li><a href="/">Homepage</a></li>
-                      <li><a href="/users">Users</a></li>
-                      <li><a href="/events">Events</a></li>
-                      <li><a>About</a></li>
-                    </ul>
-                  </div>
+                  <Show when={pbStore.user !== null}>
+                    <div class="dropdown">
+                      <label tabIndex={0} class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h7" /></svg>
+                      </label>
+                      <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/users">Users</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <Show when={pbStore.user?.permissions.includes("events")}>
+                          <li><a href="/approvals">Approvals</a></li>
+                        </Show>
+                      </ul>
+                    </div>
+                  </Show>
                 </div>
                 <div class="navbar-center">
                   <a class="btn btn-ghost normal-case text-xl" href="/">chapterLink</a>
