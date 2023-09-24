@@ -2,7 +2,7 @@
   "name": "chapterlink",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build --output public",
+    "build": "solid-start build --output .output",
     "start": "solid-start start"
   },
   "type": "module",
