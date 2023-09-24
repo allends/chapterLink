@@ -1,6 +1,7 @@
 import { TiDeleteOutline } from "solid-icons/ti"
 import { createSignal, createMemo, For } from "solid-js"
 import { User } from "~/types"
+import { createSelectableList } from "~/utils/createSelectable"
 
 export function UserPicker(props: { users: User[], selected: User[], addUser: (user: User) => void, removeUser: (user: User) => void }) {
 

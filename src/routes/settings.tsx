@@ -1,5 +1,6 @@
 import { onMount } from "solid-js"
 import { createStore } from "solid-js/store"
+import toast from "solid-toast"
 import { pbStore, updateUser } from "~/service"
 
 const initalSettingFormState = {
@@ -27,14 +28,21 @@ export default function settings() {
   })
 
   const submitUserInfo = async () => {
-    await updateUser(userInfo.venmo, userInfo.number, userInfo.birthday)
-    setUserInfo({
-      "first": pbStore.user?.first,
-      "last": pbStore.user?.last,
-      "venmo": pbStore.user?.venmo,
-      "number": pbStore.user?.number,
-      "birthday": pbStore.user?.birthday.split(" ")[0],
-    })
+    try {
+      await updateUser(userInfo.venmo, userInfo.number, userInfo.birthday)
+      setUserInfo({
+        "first": pbStore.user?.first,
+        "last": pbStore.user?.last,
+        "venmo": pbStore.user?.venmo,
+        "number": pbStore.user?.number,
+        "birthday": pbStore.user?.birthday.split(" ")[0],
+      })
+      toast.success("User info updated")
+    } catch (e) {
+      console.error(e)
+      toast.error("Could not update user info")
+    }
+    
   }
 
   return (

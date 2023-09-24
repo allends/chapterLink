@@ -67,8 +67,15 @@ export default function Home() {
           </table>
         </Match>
         <Match when={activeTab() == 1}>
-          <div class="flex flex-col">
-            <div class="py-3">Attended Events</div>
+          <div>
+          <select class="select select-bordered" value={selectedSemester()} onChange={e => setSelectedSemester(e.target.value)}>
+              <option selected>All</option>
+              <For each={_S.semestersRequest.data()}>
+                {sem => (
+                  <option>{sem}</option>
+                )}
+              </For>
+            </select>
             <table class="table">
               <thead>
                 <tr>
@@ -79,7 +86,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                <For each={_S.userEventsRequest.data()}>
+                <For each={_S.userEventsRequest.data()?.filter((p) => p.semester === selectedSemester() || selectedSemester() === "All")}>
                   {(event) => (
                     <tr>
                       <td>{event.name}</td>

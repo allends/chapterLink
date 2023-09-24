@@ -6,6 +6,8 @@ import { BiRegularCoin } from 'solid-icons/bi'
 import { AiOutlineCalendar, AiOutlinePlus } from 'solid-icons/ai'
 import { Event } from "~/types"
 import { createRequest } from "~/utils/createRequest"
+import { createSelect } from "@thisbeyond/solid-select"
+import { createSelectableList } from "~/utils/createSelectable"
 
 export const EventCard = (props: {
   event: Event,

@@ -1,6 +1,7 @@
 import { Show, createMemo, createSignal } from "solid-js"
 import { createStore } from "solid-js/store"
-import { createUser } from "~/service"
+import toast from "solid-toast"
+import { createUser, login } from "~/service"
 
 export default function create() {
   const [userForm, setUserForm] = createStore({
@@ -14,7 +15,12 @@ export default function create() {
   const onSubmit = async () => {
     console.log(userForm)
     await createUser(userForm.netID, userForm.first, userForm.last, userForm.password, userForm.confirmPassword)
-    // window.location.pathname = "/login"
+    await login(userForm.netID, userForm.password).then(() => {
+      window.location.pathname = "/"
+    }).catch(() => {
+      toast.error("Could not log in")
+      window.location.pathname = "/login"
+    })
   }
 
   const buttonText = createMemo(() => {
