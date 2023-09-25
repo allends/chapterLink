@@ -22,7 +22,6 @@
     "@kobalte/core": "^0.9.8",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.8.2",
-    "@tanstack/solid-query": "^4.35.3",
     "@thisbeyond/solid-select": "^0.14.0",
     "google-libphonenumber": "^3.2.33",
     "pocketbase": "^0.15.3",

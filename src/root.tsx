@@ -14,11 +14,9 @@ import {
 import "./root.css";
 import { logout, pb, pbStore, setPbStore, subscribe, unsubscribe, user } from "./service";
 import { User } from "./types";
-import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { Toaster } from "solid-toast";
 
 const UNPROTECTED_PATHS = ["/login", "/create"]
-const queryClient = new QueryClient()
 
 export default function Root() {
 
@@ -48,7 +46,6 @@ export default function Root() {
   }, [user()])
 
   return (
-    <QueryClientProvider client={queryClient}>
       <Html lang="en" data-theme="corporate">
         <Head>
           <Title>ChapterLink</Title>
@@ -100,6 +97,5 @@ export default function Root() {
           <Scripts />
         </Body>
       </Html>
-    </QueryClientProvider>
   );
 }

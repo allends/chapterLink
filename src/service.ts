@@ -157,3 +157,25 @@ export async function rejectUserAttendenceRequest(request: AttendenceRequest) {
   const deleted = await pb.collection('attendence_requests').delete(request.id)
   return
 }
+
+export async function sendMessage(message: string) {
+  const cookie = pb.authStore.exportToCookie({ httpOnly: true })
+  console.log(cookie)
+
+  try {
+    const resp = await fetch(import.meta.env.VITE_API + "messages/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Auth": cookie
+      },
+      body: JSON.stringify({
+        message
+      })
+    })
+    console.log(resp)
+  } catch (e) {
+    console.error(e)
+  }
+  
+}
