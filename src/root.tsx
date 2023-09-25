@@ -49,7 +49,7 @@ export default function Root() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Html lang="en" data-theme="default">
+      <Html lang="en" data-theme="corporate">
         <Head>
           <Title>ChapterLink</Title>
           <Meta charset="utf-8" />
@@ -59,7 +59,7 @@ export default function Root() {
           <Suspense>
             <ErrorBoundary>
             <Toaster />
-              <nav class="navbar bg-primary text-primary-content" data-theme="cupcake">
+              <nav class="navbar bg-base-200">
                 <div class="navbar-start">
                   <Show when={pbStore.user !== null}>
                     <div class="dropdown">

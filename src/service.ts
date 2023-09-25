@@ -43,11 +43,6 @@ export async function updateUser(venmo: string, number: string, birthday: string
    })
 }
 
-export async function getSemesters(): Promise<string[]> {
-  const records = await pb.collection("semester").getFullList()
-  return records.map(rec => rec.id)
-}
-
 export async function getAllEvents(): Promise<Event[]> {
   const records = await pb.collection('events').getFullList<Event>({
     sort: '-date',

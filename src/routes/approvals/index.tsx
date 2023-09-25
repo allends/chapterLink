@@ -1,4 +1,4 @@
-import { For, createEffect, createMemo } from "solid-js"
+import { For, Show, createEffect, createMemo } from "solid-js"
 import { approveUserAttendenceRequest, getAllAttendenceRequests, getAllEvents, getUsers, rejectUserAttendenceRequest } from "~/service"
 import { AttendenceRequest } from "~/types"
 import { createRequest } from "~/utils/createRequest"
@@ -54,7 +54,7 @@ const Approvals = () => {
       <div class="flex flex-col gap-2">
       <For each={_S.approvals()}>
         {(item) => (
-          <div class="bg-neutral p-5 rounded-md flex flex-row items-center justify-between">
+          <div class="bg-base-200 p-5 rounded-md flex flex-row items-center justify-between">
             <div>
               {item.event.name} = {item.user.first}
             </div>
@@ -65,6 +65,9 @@ const Approvals = () => {
           </div>
         )}
       </For>
+      <Show when={_S.approvals().length === 0}>
+        <div class="text-2xl text-neutral-400">No approvals</div>
+      </Show>
       </div>
     </main>
   )

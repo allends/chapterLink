@@ -1,19 +1,23 @@
 import { For, Match, Show, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store"
-import { TiDeleteOutline } from 'solid-icons/ti'
-import { createEvent, getSemesters, getUsers } from "~/service";
-import { User } from "~/types";
+import { createEvent, getUsers } from "~/service";
+import { Semester, User } from "~/types";
 import { createRequest } from "~/utils/createRequest";
 import { UserPicker } from "~/components/user/UserPicker";
+import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util";
 
 export const createEventState = () => {
   const options = ['Brotherhood', 'Scholarship', 'Professionalism', 'Community Service', 'Fundraising', 'Pledge']
+  const userRequest = createRequest(getUsers)
+  const semesters = generateSemesterOptions()
+  const defaultSemester = getCurrentSemester()
+  
   const [eventForm, setEventForm] = createStore<{
     name: string;
     value: number;
     date: string;
     category: string;
-    semester: string;
+    semester: Semester;
     location: string;
     description: string;
     organizers: User[];
@@ -22,7 +26,7 @@ export const createEventState = () => {
     "date": "",
     "category": "",
     "value": 1,
-    "semester": "",
+    "semester": defaultSemester,
     "location": "",
     "description": "",
     "organizers": []
@@ -32,8 +36,7 @@ export const createEventState = () => {
     return eventForm.organizers.find(u => u.id === newUser.id)
   }
 
-  const userRequest = createRequest(getUsers)
-  const semesterRequest = createRequest(getSemesters)
+  
 
   const [searchTerm, setSearchTerm] = createSignal<string>("")
 
@@ -48,6 +51,7 @@ export const createEventState = () => {
   }
 
   const submitEvent = () => {
+    console.log(eventForm)
     createEvent(
       eventForm.name,
       eventForm.value,
@@ -64,7 +68,7 @@ export const createEventState = () => {
           "date": "",
           "category": "",
           "value": 1,
-          "semester": "",
+          "semester": defaultSemester,
           "location": "",
           "description": "",
           "organizers": []
@@ -82,7 +86,8 @@ export const createEventState = () => {
     setEventForm,
     isSelected,
     userRequest,
-    semesterRequest,
+    semesters: semesters.filter(sem => sem !== defaultSemester),
+    defaultSemester,
     searchTerm, setSearchTerm,
     addUser,
     removeUser,
@@ -110,7 +115,7 @@ export default function newevent() {
           class="select select-bordered w-1/2"
           onChange={e => _S.setEventForm("category", e.target.value)}
         >
-          <option disabled selected>Category</option>
+          <option disabled selected>category</option>
           <For each={_S.options}>
             {opt => (
               <option>{opt}</option>
@@ -129,10 +134,11 @@ export default function newevent() {
       <div class="flex flex-row gap-3 w-full px-4">
         <select
           class="select select-bordered w-1/2"
-          onChange={e => _S.setEventForm("semester", e.target.value)}
+          onChange={e => _S.setEventForm("semester", e.target.value as Semester)}
         >
-          <option disabled selected>Semester</option>
-          <For each={_S.semesterRequest.data()}>
+          <option selected>{_S.defaultSemester}</option>
+          <option disabled>---</option>
+          <For each={_S.semesters}>
             {opt => (
               <option>{opt}</option>
             )}

@@ -15,6 +15,7 @@ export const createRequest = <T, E extends Error>(fetcher: () => Promise<T>) => 
     fetcher().then((res: T) => {
       setData(() => res)
     }).catch(error => {
+      console.log("error")
       setError(error as Error | E)
     }).finally(() => {
       setLoading(false)
