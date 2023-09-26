@@ -5,6 +5,7 @@ import { Semester, User } from "~/types";
 import { createRequest } from "~/utils/createRequest";
 import { UserPicker } from "~/components/user/UserPicker";
 import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util";
+import { CompactUserPicker } from "~/components/user/CompactUserPicker";
 
 export const createEventState = () => {
   const options = ['Brotherhood', 'Scholarship', 'Professionalism', 'Community Service', 'Fundraising', 'Pledge']
@@ -168,13 +169,13 @@ export default function newevent() {
       />
       <input type="text"
         placeholder="Organizers"
-        onClick={() => (window as any).my_modal_2.showModal()}
+        onClick={() => (window as any).my_modal_3.showModal()}
         class="input input-bordered w-full max-w-xs"
         value={_S.eventForm.organizers.map(org => `${org.first} ${org.last}`).join(", ")}
       />
       <button class="btn btn-primary" onClick={_S.submitEvent}>Create</button>
       <Show when={!_S.userRequest.loading() && _S.userRequest.data()}>
-        <UserPicker users={_S.userRequest.data() || []} selected={_S.eventForm.organizers} addUser={_S.addUser} removeUser={_S.removeUser} />
+        <CompactUserPicker users={_S.userRequest.data() || []} selected={_S.eventForm.organizers} addUser={_S.addUser} removeUser={_S.removeUser} />
       </Show>
     </div>
   )

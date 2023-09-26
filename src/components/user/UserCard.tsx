@@ -1,3 +1,4 @@
+import { JSX, Show } from "solid-js";
 import { User } from "~/types"
 
 // This isn't quite right but it will do for now
@@ -12,9 +13,14 @@ function parseDateString(dateString: string): Date | null {
   return null; // Return null for invalid input
 }
 
-export const UserCard = (props: { user: User }) => {
+type UserCardType = {
+  user: User,
+  compact?: boolean
+} & JSX.HTMLAttributes<HTMLDivElement>
+
+export const UserCard = (props: UserCardType) => {
   return (
-    <div class="flex flex-row w-full bg-base-200 items-center p-5 rounded-3xl">
+    <div class="flex flex-row w-full bg-base-200 items-center p-5 rounded-3xl" {...props}>
       <div class={`avatar placeholder ${props.user.status === 'active' && 'online'} ${props.user.status === 'inactive' && 'offline'}`}>
         <div class="bg-neutral-focus text-neutral-content rounded-full w-14 h-14">
           <span class="text-3xl">{props.user.first.charAt(0)}</span>
@@ -22,8 +28,10 @@ export const UserCard = (props: { user: User }) => {
       </div>
       <div class="flex flex-col ml-10 items-start">
         <h1 class="text-2xl font-bold">{props.user.first}</h1>
-        <div>{props.user.number}</div>
-        <div>{parseDateString(props.user.birthday)?.toDateString() ?? "Wish them hbd whenever you want"}</div>
+        <Show when={!props.compact}>
+          <div>{props.user.number}</div>
+          <div>{parseDateString(props.user.birthday)?.toDateString() ?? "Wish them hbd whenever you want"}</div>
+        </Show>
       </div>
     </div>
   )

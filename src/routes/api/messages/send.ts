@@ -14,6 +14,7 @@ enum default_variables {
   first,
   status,
 }
+
 export async function POST(event: APIEvent) {
   try {
     const request_json = await event.request.json()
