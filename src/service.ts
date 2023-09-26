@@ -158,9 +158,8 @@ export async function rejectUserAttendenceRequest(request: AttendenceRequest) {
   return
 }
 
-export async function sendMessage(message: string) {
+export async function sendMessage(message: string, user_ids: string[]) {
   const cookie = pb.authStore.exportToCookie({ httpOnly: true })
-  console.log(cookie)
 
   try {
     const resp = await fetch(import.meta.env.VITE_API + "messages/send", {
@@ -170,10 +169,11 @@ export async function sendMessage(message: string) {
         "Auth": cookie
       },
       body: JSON.stringify({
-        message
+        message,
+        users: user_ids
       })
     })
-    console.log(resp)
+    return resp
   } catch (e) {
     console.error(e)
   }

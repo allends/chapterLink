@@ -9,6 +9,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "@types/google-libphonenumber": "^7.4.26",
+    "@types/node": "^20.7.0",
     "autoprefixer": "^10.4.13",
     "daisyui": "^3.2.1",
     "postcss": "^8.4.21",
@@ -29,6 +30,7 @@
     "solid-js": "^1.7.5",
     "solid-start": "^0.2.26",
     "solid-toast": "^0.5.0",
+    "twilio": "^4.18.0",
     "undici": "^5.22.1"
   },
   "engines": {

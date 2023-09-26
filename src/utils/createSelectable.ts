@@ -1,10 +1,9 @@
-import { createMemo, createSignal } from "solid-js"
+import { createEffect, createMemo, createSignal } from "solid-js"
 
 export const createSelectableList = <T>(items: T[], extractor: (item: T) => string, multiple = true ) => {
+  const [internalItems, setItems] = createSignal<T[]>(items)
   const [selectedIds, setSelectedIds] = createSignal<string[]>([])
-  const selectedItems = createMemo(() => {
-    return items.filter(item => selectedIds().includes(extractor(item))
-  )})
+  const selectedItems = createMemo(() => internalItems().filter(item => selectedIds().includes(extractor(item))))
 
   const isItemSelected = (item: T) => {
     return selectedIds().includes(extractor(item))
@@ -31,11 +30,13 @@ export const createSelectableList = <T>(items: T[], extractor: (item: T) => stri
   }
 
   return {
-    selectedItems,
-    setSelectedIds,
-    isItemSelected,
     addItem,
+    isItemSelected,
     removeItem,
+    selectedIds,
+    selectedItems,
+    setItems,
+    setSelectedIds,
     toggleItem
   }
 }
