@@ -1,5 +1,6 @@
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
+import { useAuth } from "~/service/auth/AuthContext";
 import { createRequest } from "~/utils/createRequest";
 import { parseDate } from "~/utils/date";
 import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util";
@@ -21,13 +22,14 @@ const createHomeState = () => {
 export default function Home() {
 
   const _S = createHomeState()
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = createSignal<number>(0)
   const [selectedSemester, setSelectedSemester] = createSignal<string>("All")
 
   return (
     <main class="text-center mx-auto p-4">
       <div class="font-bold text-3xl">
-        {pbStore.user?.first}'s Dashboard
+        {user().first}'s Dashboard
       </div>
       <div class="tabs tabs-boxed max-w-fit mx-auto m-5">
         <a class={`tab ${activeTab() == 0 && 'tab-active'}`} onClick={() => setActiveTab(0)}>Events</a>

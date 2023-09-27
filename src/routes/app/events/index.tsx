@@ -7,6 +7,7 @@ import { AiOutlineCalendar, AiOutlinePlus } from 'solid-icons/ai'
 import { Event } from "~/types"
 import { createRequest } from "~/utils/createRequest"
 import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util"
+import { useAuth } from "~/service/auth/AuthContext"
 
 export const EventCard = (props: {
   event: Event,
@@ -64,6 +65,7 @@ const createEventState = () => {
   const defaultSemester = getCurrentSemester()
   const [selectedEventId, setSelectedEventId] = createSignal<string | undefined>()
   const [selectedSemester, setSelectedSemester] = createSignal<string>("All")
+  const { user } = useAuth()
 
   createEffect(() => {
     if (eventsRequest.data() && !selectedEventId()) {
@@ -76,7 +78,7 @@ const createEventState = () => {
   })
 
   const eventAttended = () => {
-    return selectedEvent()?.attendees.some(user => user === pbStore.user?.id) || false
+    return selectedEvent()?.attendees.some(u => u === user().id) || false
   }
 
   const eventRequested = () => {
@@ -84,13 +86,13 @@ const createEventState = () => {
   }
 
   const onEventRequest = () => {
-    requestEvent(pbStore.user?.id!, selectedEvent()?.id!).then(() => {
+    requestEvent(user().id, selectedEvent()?.id!).then(() => {
       userAttendanceRequest.fetch()
     })
   }
 
   const onEventReject = () => {
-    unrequestEvent(pbStore.user?.id!, selectedEvent()?.id!).then(() => {
+    unrequestEvent(user().id!, selectedEvent()?.id!).then(() => {
       userAttendanceRequest.fetch()
     })
   }
@@ -107,7 +109,8 @@ const createEventState = () => {
     selectedSemester,
     setSelectedSemester,
     onEventRequest,
-    onEventReject
+    onEventReject,
+    user
   }
 }
 
@@ -138,7 +141,7 @@ export default function events() {
             </select>
           </div>
           <ul class="menu bg-base-200 rounded-box overflow-auto max-h-64 flex-nowrap">
-            <Show when={pbStore.user?.permissions.includes("events")}>
+            <Show when={_S.user().permissions.includes("events")}>
               <li><a href="/app/events/new" class="flex flex-row items-center justify-between">New<AiOutlinePlus class="fill-primary-content" /></a></li>
             </Show>
             <For each={_S.eventsRequest.data()?.filter(event => _S.selectedSemester() === event.semester || _S.selectedSemester() === "All")} fallback={<div>no events</div>}>

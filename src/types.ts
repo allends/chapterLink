@@ -1,3 +1,15 @@
+export type Organization = {
+  id: string
+  belongs: string
+  name: string
+  point_categories: string[]
+  elevated_roles: string[]
+  admin_roles: string[]
+  event_tags: string[]
+
+}
+
+
 export type User = {
   id: string
   first: string
@@ -10,7 +22,7 @@ export type User = {
   class: string 
   number: string
   permissions: string[]
-  
+  organization: string
 }
 
 export type Event = {

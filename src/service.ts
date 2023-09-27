@@ -33,6 +33,7 @@ export async function login(username: string, password: string): Promise<RecordA
 export function logout() {
   setUser()
   pb.authStore.clear()
+  window.location.reload()
 }
 
 export async function updateUser(venmo: string, number: string, birthday: string) {

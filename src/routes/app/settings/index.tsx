@@ -2,6 +2,7 @@ import { onMount } from "solid-js"
 import { createStore } from "solid-js/store"
 import toast from "solid-toast"
 import { pbStore, updateUser } from "~/service"
+import { useAuth } from "~/service/auth/AuthContext"
 
 const initalSettingFormState = {
   first: "",
@@ -15,15 +16,16 @@ type SettingFormType = typeof initalSettingFormState
 
 export default function settings() {
 
+  const { user } = useAuth()
   const [userInfo, setUserInfo] = createStore<SettingFormType>(initalSettingFormState) 
 
   onMount(() => {
     setUserInfo({
-      "first": pbStore.user?.first,
-      "last": pbStore.user?.last,
-      "venmo": pbStore.user?.venmo,
-      "number": pbStore.user?.number,
-      "birthday": pbStore.user?.birthday.split(" ")[0],
+      "first": user().first,
+      "last": user().last,
+      "venmo": user().venmo,
+      "number": user().number,
+      "birthday": new Date(user().birthday).toString(),
     })
   })
 
@@ -44,6 +46,7 @@ export default function settings() {
     }
     
   }
+
 
   return (
     <div class="prose flex flex-col items-center mx-auto my-5">

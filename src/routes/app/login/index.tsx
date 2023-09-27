@@ -10,8 +10,10 @@ export default function LoginPage() {
     password: ""
   })
 
-  const onSubmit = () => {
+  const onSubmit = (e: any) => {
+    e.preventDefault()
     login(loginInfo.userName, loginInfo.password).then(() => {
+      console.log("Logged in")
       window.location.pathname = "/"
     }).catch(() => {
       toast.error("Invalid login")
