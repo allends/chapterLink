@@ -1,7 +1,6 @@
-import { For, Show, createSignal, onMount } from "solid-js";
+import { For } from "solid-js";
 import { UserCard } from "~/components/user/UserCard";
 import { getUsers } from "~/service";
-import { User } from "~/types";
 import { createRequest } from "~/utils/createRequest";
 
 export const createUsersState = () => {

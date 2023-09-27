@@ -1,7 +1,5 @@
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal, onMount } from "solid-js";
-import { Navigate } from "solid-start";
-import { getAllEvents, getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
-import { User, Event, Points } from "~/types";
+import { getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
 import { createRequest } from "~/utils/createRequest";
 import { parseDate } from "~/utils/date";
 import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util";
@@ -34,7 +32,6 @@ export default function Home() {
       <div class="tabs tabs-boxed max-w-fit mx-auto m-5">
         <a class={`tab ${activeTab() == 0 && 'tab-active'}`} onClick={() => setActiveTab(0)}>Events</a>
         <a class={`tab ${activeTab() == 1 && 'tab-active'}`} onClick={() => setActiveTab(1)}>Points</a>
-        <a class={`tab ${activeTab() == 2 && 'tab-active'}`} onClick={() => setActiveTab(2)}>Position</a>
       </div>
       <Switch fallback={<div>Not Implemented... yet</div>}>
         <Match when={activeTab() == 0}>

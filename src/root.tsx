@@ -65,10 +65,10 @@ export default function Root() {
                       </label>
                       <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li><a href="/">Homepage</a></li>
-                        <li><a href="/users">Users</a></li>
-                        <li><a href="/events">Events</a></li>
+                        <li><a href="/app/user/all">Users</a></li>
+                        <li><a href="/app/events">Events</a></li>
                         <Show when={pbStore.user?.permissions.includes("events")}>
-                          <li><a href="/approvals">Approvals</a></li>
+                          <li><a href="/app/approvals">Approvals</a></li>
                         </Show>
                       </ul>
                     </div>
@@ -83,8 +83,8 @@ export default function Root() {
                       {pbStore.user?.first[0] ?? "?"}
                     </label>
                     <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                      <li><a href="/settings">Settings</a></li>
-                      <li>{pbStore.user !== null ? <button onClick={onLogout}>Logout</button> : <a href="/login">Login</a>}</li>
+                      <li><a href="/app/settings">Settings</a></li>
+                      <li>{pbStore.user !== null ? <button onClick={onLogout}>Logout</button> : <a href="/app/login">Login</a>}</li>
                     </ul>
                   </div>
                 </div>

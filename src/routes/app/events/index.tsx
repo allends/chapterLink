@@ -2,7 +2,7 @@ import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
 import { getAllEvents, getUserAttendenceRequests, pbStore, requestEvent, unrequestEvent } from "~/service"
 import { OcLocation2 } from 'solid-icons/oc'
 import { VsOrganization } from 'solid-icons/vs'
-import { BiRegularCoin, BiSolidCoinStack } from 'solid-icons/bi'
+import { BiSolidCoinStack } from 'solid-icons/bi'
 import { AiOutlineCalendar, AiOutlinePlus } from 'solid-icons/ai'
 import { Event } from "~/types"
 import { createRequest } from "~/utils/createRequest"
@@ -139,7 +139,7 @@ export default function events() {
           </div>
           <ul class="menu bg-base-200 rounded-box overflow-auto max-h-64 flex-nowrap">
             <Show when={pbStore.user?.permissions.includes("events")}>
-              <li><a href="/newevent" class="flex flex-row items-center justify-between">New<AiOutlinePlus class="fill-primary-content" /></a></li>
+              <li><a href="/app/events/new" class="flex flex-row items-center justify-between">New<AiOutlinePlus class="fill-primary-content" /></a></li>
             </Show>
             <For each={_S.eventsRequest.data()?.filter(event => _S.selectedSemester() === event.semester || _S.selectedSemester() === "All")} fallback={<div>no events</div>}>
               {(item, index) => (

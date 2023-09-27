@@ -20,7 +20,7 @@ type UserCardType = {
 
 export const UserCard = (props: UserCardType) => {
   return (
-    <div class="flex flex-row w-full bg-base-200 items-center p-5 rounded-3xl" {...props}>
+    <div class={`flex flex-row w-full bg-base-200 items-center p-5 rounded-3xl ${props.onClick && "cursor-pointer"}`} {...props}>
       <div class={`avatar placeholder ${props.user.status === 'active' && 'online'} ${props.user.status === 'inactive' && 'offline'}`}>
         <div class="bg-neutral-focus text-neutral-content rounded-full w-14 h-14">
           <span class="text-3xl">{props.user.first.charAt(0)}</span>
