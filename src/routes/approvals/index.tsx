@@ -1,6 +1,5 @@
-import { For, Show, createEffect, createMemo } from "solid-js"
+import { For, Show, createMemo } from "solid-js"
 import { approveUserAttendenceRequest, getAllAttendenceRequests, getAllEvents, getUsers, rejectUserAttendenceRequest } from "~/service"
-import { AttendenceRequest } from "~/types"
 import { createRequest } from "~/utils/createRequest"
 
 const createApprovalState = () => {
@@ -56,7 +55,7 @@ const Approvals = () => {
         {(item) => (
           <div class="bg-base-200 p-5 rounded-md flex flex-row items-center justify-between">
             <div>
-              {item.event.name} = {item.user.first}
+              {item.user.first} is requesting to attend {item.event.name}
             </div>
             <div class="flex gap-2">
               <button class="btn btn-error" onClick={() => _S.handleRejectEvent(item.id)}>reject</button>

@@ -1,10 +1,34 @@
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { Navigate } from "solid-start";
-import { getAllEvents, getUserEvents, getUserPoints, getUsers, pbStore } from "~/service";
+import { getAllEvents, getUserEvents, getUserPoints, getUserRoles, getUsers, pbStore } from "~/service";
 import { User, Event, Points } from "~/types";
 import { createRequest } from "~/utils/createRequest";
 import { parseDate } from "~/utils/date";
 import { generateSemesterOptions, getCurrentSemester } from "~/utils/semester.util";
+
+const createPositionState = () => {
+  const userRolesRequest = createRequest(getUserRoles)
+
+  return {
+    userRolesRequest
+  }
+}
+
+function UserRoleView() {
+  const _S = createPositionState()
+
+  return (
+    <div>
+      <For each={_S.userRolesRequest.data()}>
+        {(role) => (
+          <div>
+            {role.name}
+          </div>
+        )}
+      </For>
+    </div>
+  )
+}
 
 const createHomeState = () => {
   const userEventsRequest = createRequest(getUserEvents)
@@ -106,6 +130,9 @@ export default function Home() {
               </For>
             </tbody>
           </table>
+        </Match>
+        <Match when={activeTab() == 2}>
+              <UserRoleView />
         </Match>
       </Switch>
     </main>

@@ -67,6 +67,20 @@ export async function getUserPoints(): Promise<Points[]> {
   return records.items
 }
 
+type Role = {
+  name: string,
+  description: string,
+  level: string
+}
+
+export async function getUserRoles(): Promise<Role[]> {
+  const records = await pb.collection('semester_roles').getList<Role>(1, 50, {
+    filter: `user = "${pb.authStore.model?.id}"`,
+    expand: "user, role"
+  })
+  return records.items
+}
+
 export async function getEventsById(userId: string): Promise<Event[]> {
   const records = await pb.collection('events').getList<Event>(1, 50, {
     sort: "-date",

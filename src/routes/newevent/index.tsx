@@ -36,8 +36,6 @@ export const createEventState = () => {
     return eventForm.organizers.find(u => u.id === newUser.id)
   }
 
-  
-
   const [searchTerm, setSearchTerm] = createSignal<string>("")
 
   const addUser = (newUser: User) => {
